@@ -1,55 +1,60 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs"
-import "react-tabs/style/react-tabs.css"
-import { FaGithub, FaCodeBranch, FaUsers, FaExternalLinkAlt } from "react-icons/fa"
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import {
+  FaGithub,
+  FaCodeBranch,
+  FaUsers,
+  FaExternalLinkAlt,
+} from "react-icons/fa";
 
 export default function Home() {
-  const [repository, setRepository] = useState(null)
-  const [maintainers, setMaintainers] = useState([])
-  const [openPRs, setOpenPRs] = useState([])
-  const [closedPRs, setClosedPRs] = useState([])
-  const [mergedPRs, setMergedPRs] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [repository, setRepository] = useState(null);
+  const [maintainers, setMaintainers] = useState([]);
+  const [openPRs, setOpenPRs] = useState([]);
+  const [closedPRs, setClosedPRs] = useState([]);
+  const [mergedPRs, setMergedPRs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       try {
         // Fetch repository info
-        const repoResponse = await fetch("/api/repository")
-        const repoData = await repoResponse.json()
-        setRepository(repoData)
+        const repoResponse = await fetch("/api/repository");
+        const repoData = await repoResponse.json();
+        setRepository(repoData);
 
         // Fetch maintainers
-        const maintainersResponse = await fetch("/api/maintainers")
-        const maintainersData = await maintainersResponse.json()
-        setMaintainers(maintainersData)
+        const maintainersResponse = await fetch("/api/maintainers");
+        const maintainersData = await maintainersResponse.json();
+        setMaintainers(maintainersData);
 
         // Fetch PRs
-        const openResponse = await fetch("/api/pull-requests?status=open")
-        const openData = await openResponse.json()
-        setOpenPRs(openData)
+        const openResponse = await fetch("/api/pull-requests?status=open");
+        const openData = await openResponse.json();
+        setOpenPRs(openData);
 
-        const closedResponse = await fetch("/api/pull-requests?status=closed")
-        const closedData = await closedResponse.json()
-        setClosedPRs(closedData)
+        const closedResponse = await fetch("/api/pull-requests?status=closed");
+        const closedData = await closedResponse.json();
+        setClosedPRs(closedData);
 
-        const mergedResponse = await fetch("/api/pull-requests?status=merged")
-        const mergedData = await mergedResponse.json()
-        setMergedPRs(mergedData)
+        const mergedResponse = await fetch("/api/pull-requests?status=merged");
+        const mergedData = await mergedResponse.json();
+        setMergedPRs(mergedData);
 
-        setLoading(false)
+        setLoading(false);
       } catch (error) {
-        console.error("Error fetching data:", error)
-        setLoading(false)
+        console.error("Error fetching data:", error);
+        setLoading(false);
       }
     }
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-gray-900 min-h-screen text-gray-200">
@@ -57,8 +62,16 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-            <Image src="/core_explorer-png.png" alt="Logo" width={80} height={80} className="mr-3" />
-              <h1 className="text-xl font-mono font-bold text-orange-400">Bitcoin Core Explorer</h1>
+              <Image
+                src="/public/oglogo.png"
+                alt="Logo"
+                width={80}
+                height={80}
+                className="mr-3"
+              />
+              <h1 className="text-xl font-mono font-bold text-orange-400">
+                Bitcoin Core Explorer
+              </h1>
             </div>
             <a
               href="https://github.com/bitcoin/bitcoin"
@@ -112,14 +125,21 @@ export default function Home() {
                     {maintainers.length > 0 ? (
                       <ul className="divide-y divide-gray-700">
                         {maintainers.map((maintainer) => (
-                          <li key={maintainer.uuid} className="p-4 hover:bg-gray-750 transition-colors">
+                          <li
+                            key={maintainer.uuid}
+                            className="p-4 hover:bg-gray-750 transition-colors"
+                          >
                             <div className="font-medium">{maintainer.name}</div>
-                            <div className="text-sm text-gray-400">{maintainer.email}</div>
+                            <div className="text-sm text-gray-400">
+                              {maintainer.email}
+                            </div>
                           </li>
                         ))}
                       </ul>
                     ) : (
-                      <div className="p-4 text-gray-400">No maintainers found</div>
+                      <div className="p-4 text-gray-400">
+                        No maintainers found
+                      </div>
                     )}
                   </div>
                 </div>
@@ -157,12 +177,12 @@ export default function Home() {
         )}
       </main>
     </div>
-  )
+  );
 }
 
 function PRList({ prs }) {
   if (prs.length === 0) {
-    return <div className="p-6 text-gray-400">No pull requests found</div>
+    return <div className="p-6 text-gray-400">No pull requests found</div>;
   }
 
   return (
@@ -176,15 +196,20 @@ function PRList({ prs }) {
                   #{pr.number} {pr.title}
                 </h3>
                 <div className="text-sm text-gray-400 mt-1">
-                  Opened by {pr.author.name} on {new Date(pr.openedAt).toLocaleDateString()}
+                  Opened by {pr.author.name} on{" "}
+                  {new Date(pr.openedAt).toLocaleDateString()}
                 </div>
               </div>
               <div className="text-sm text-gray-400">
                 {pr.status === "closed" && pr.closedAt && (
-                  <span className="text-red-400">Closed on {new Date(pr.closedAt).toLocaleDateString()}</span>
+                  <span className="text-red-400">
+                    Closed on {new Date(pr.closedAt).toLocaleDateString()}
+                  </span>
                 )}
                 {pr.status === "merged" && pr.mergedAt && (
-                  <span className="text-purple-400">Merged on {new Date(pr.mergedAt).toLocaleDateString()}</span>
+                  <span className="text-purple-400">
+                    Merged on {new Date(pr.mergedAt).toLocaleDateString()}
+                  </span>
                 )}
               </div>
             </div>
@@ -192,6 +217,5 @@ function PRList({ prs }) {
         </li>
       ))}
     </ul>
-  )
+  );
 }
-
