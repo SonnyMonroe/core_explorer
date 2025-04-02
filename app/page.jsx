@@ -63,7 +63,7 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <Image
-                src="/public/oglogo.png"
+                src="/oglogo.png"
                 alt="Logo"
                 width={80}
                 height={80}
